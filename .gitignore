@@ -1,0 +1,9 @@
+__pycache__
+.mypy_cache
+.vscode
+*.db*
+secrets.json
+geckodriver.log
+logs/
+nohup.out
+grade.py

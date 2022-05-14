@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Support Chat</h1>
+
+<div id="chat-wrapper">
+    <div id="chat-container" class="chat container vertical">
+        <div class="message received">
+            <img src="/static/img/support.jpg">
+            <address>support</address>
+            <p>Hi! I'm <b>Johnny Link-Clicker</b>, your support representative. Ask me any questions you have! If your message includes a link, I will read it.</p>
+        </div>
+
+        {% for message in messages %}
+        {% if message.from_support %}
+            <div class="message received }}">
+                <img src="/static/img/support.jpg">
+                <address>support</address>
+                <p>{{ message.message }}</p>
+            </div>
+            {% else %}
+            <div class="message sent">
+                <img src="/static/img/user.jpg">
+                <address>{{ identikey }}</address>
+                <p>{{ message.message }}</p>
+            </div>
+        {% endif %}
+        {% endfor %}
+
+        <template id="message-template">
+        <div class="message">
+            <img src="">
+            <address></address>
+            <p></p>
+        </div>
+        </template>
+
+    </div>
+</div>
+
+<form id="chat-form" class="container" method="post">
+    <input id="message" name="message" type="text" placeholder="Message">
+    <input type="submit" value="Send">
+</form>
+
+<script>
+    let chat_form = document.getElementById('chat-form');
+    let chat_wrapper = document.getElementById('chat-wrapper');
+    let chat_container = document.getElementById('chat-container');
+    let message_template = document.getElementById('message-template');
+    let message_input = document.getElementById('message');
+
+    function scroll_to_bottom() {
+        chat_wrapper.scrollTop = chat_wrapper.scrollHeight;
+    }
+
+    function append_message(username, message, sent) {
+        var new_message = message_template.content.cloneNode(true);
+        new_message.querySelector('div').classList.add(sent ? 'sent' : 'received');
+        new_message.querySelector('address').textContent = username;
+        new_message.querySelector('p').textContent = message;
+        new_message.querySelector('img').src = sent ? '/static/img/user.jpg' : '/static/img/support.jpg';
+
+        chat_container.appendChild(new_message);
+        scroll_to_bottom();
+    }
+
+    scroll_to_bottom();
+    chat_form.onsubmit = function() {
+        let form_data = new FormData(chat_form);
+
+        append_message('{{ identikey }}', form_data.get('message'), true);
+        message_input.value = '';
+        
+        fetch('/message', {
+            method: 'post',
+            body: form_data,
+        }).then((response) => {
+            return response.text();
+        }).then((response_text) => {
+            append_message('support', response_text, false);
+        }).catch((error) => {
+            console.error(error);
+        })
+
+        return false;
+    }
+</script>
+{% endblock %}

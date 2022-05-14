@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{title}}</title>
+    <link href="/static/main.css" rel="stylesheet" media="screen">
+  </head>
+  <body class="container horizontal">
+    {% block scoreboard %}
+    <aside class="scoreboard container vertical center">
+      <h1>{{ identikey }}</h1>
+      <a href="/instructions"><button>Instructions</button></a>
+      <ul class="nostyle">
+        {% for goal in goals %}
+        <a class="nostyle" href="/instructions#{{ goal.name }}">
+          <li class="goal {{ 'complete' if goal.id in completed else 'incomplete' }}">
+            <h2>{{ goal.name }}: {{ goal.points }} points</h2>
+            <p>{{ goal.description }}</p>
+          </li>
+        </a>
+        {% endfor %}
+      </ul>
+    </aside>
+    {% endblock %}
+    <main class="container vertical">
+      {% block navbar %}
+      <header class="navbar">
+        <div class="container horizontal">    
+          <h1 class="logo"><a href="/" class="nostyle">BIN/CA$H</a></h1>
+          <nav>
+            <ul class="container horizontal">
+              <li>
+                <a href="/" class="nostyle">Home</a>
+              </li>
+              <li>
+                <a href="/users" class="nostyle">Users</a>
+              </li>
+              <li>
+                <a href="/profile/{{ identikey }}" class="nostyle">Profile</a>
+              </li>
+              <li>
+                <a href="/support" class="nostyle">Support</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
+      {% endblock %}
+      
+      <ul class="flash-messages">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <li class="flash-{{ category }}" onclick="this.classList.add('hidden')">{{ message | safe }}<br/><i class="dismiss-text">click to dismiss</i></li>
+        {% endfor %}
+      {% endwith %}
+      </ul>
+      <div class="container vertical content">
+          {% block content %}{% endblock %}
+      </div>
+    </main>
+  </body>
+</html>

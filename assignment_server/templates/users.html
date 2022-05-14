@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Users</h1>
+<form class="user-search container" action="users" method="GET">
+  <input name="query" type="text" placeholder="Search users" value="{{ query }}">
+  <input type="submit" value="Search">
+</form>
+
+{% if results %}
+<div class="container vertical results">
+  {% for result in results %}
+  <a href="profile/{{ result.username }}" class="nostyle">
+    <div class="user-thumbnail container horizontal">
+      <img src="static/img/{{ result.profile_picture }}">
+      <h3>{{ result.username }}</h3>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% elif error %}
+<div class="error">
+  {{ error }}
+  <p class="sql">{{ sql }}</p>
+</div>
+{% endif %}
+{% endblock %}

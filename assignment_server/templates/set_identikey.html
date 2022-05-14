@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block scoreboard %}
+{% endblock %}
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+<div class="set_identikey">
+  <form action="/set_identikey" class="container vertical center" method="post">
+    <h1>Enter your identikey:</h1>
+    <input name="identikey" type="text">
+  </form>
+</div>
+
+{% for error in form.identikey.errors %}
+<div class="error">
+{{ error }}
+</div>
+{% endfor %}
+{% endblock %}

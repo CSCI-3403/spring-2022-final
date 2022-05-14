@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Scores</h1>
+<table>
+  <tr>
+    <th>Goal</th>
+    <th>Time</th>
+    <th>Comment</th>
+  </tr>
+  {% for entry in goals %}
+  <tr>
+    <td>{{ entry.id }}</td>
+    <td>{{ entry.time.strftime('%I:%M %p') }}</td>
+    <td>{{ entry.comment }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h1>History</h1>
+
+<table>
+  <tr>
+    <th>Time</th>
+    <th>IP</th>
+    <th>Message</th>
+  </tr>
+  {% for entry in history %}
+  <tr>
+    <td>{{ entry.time.strftime('%I:%M %p') }}</td>
+    <td>{{ entry.ip }}</td>
+    <td>{{ entry.message }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

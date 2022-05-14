@@ -1,0 +1,51 @@
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin: 0;
+    font-size: 1em;
+    padding: 4px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+td.score-0 {
+    background-color: coral;
+}
+
+td.score-1 {
+    background-color: coral;
+}
+
+td.score-2 {
+    background-color: yellow;
+}
+
+td.score-3 {
+    background-color: yellow;
+}
+
+td.score-3 {
+    background-color: greenyellow;
+}
+
+td.True {
+    background-color: greenyellow;
+}

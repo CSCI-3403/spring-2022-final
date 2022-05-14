@@ -1,0 +1,383 @@
+/* General */
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+dd {
+    margin: 0;
+}
+
+a.nostyle {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul.nostyle, li.nostyle {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+input[type="submit"], button {
+    font-size: 1em;
+    padding: 0 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
+/* Flashes */
+.flash-messages {
+    list-style: none;
+    position: absolute;
+    bottom: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.flash-messages > * {
+    border-radius: 8px;
+    background: lightblue;
+    padding: 8px;
+    font-size: 2em;
+    animation-name: FadeIn;
+    animation-duration: 1s;
+    transition-timing-function: linear;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+@keyframes FadeIn {
+0% {
+    opacity: 0;
+}
+100% {
+    opacity: 1;
+}
+}
+
+.flash-goal {
+    background: lightgreen;
+}
+
+.flash-warning {
+    background: coral;
+}
+
+.dismiss-text {
+    font-size: .8em;
+}
+
+/* Scoreboard */
+.scoreboard {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: lightgrey;
+    padding: 8px;
+    border-right: 4px solid black;
+    font-size: 1.1em;
+    overflow-y: auto;
+    min-width: 300px;
+}
+
+.scoreboard button {
+    font-size: 1.5em;
+    margin-bottom: 8px;
+}
+
+.scoreboard .goal {
+    border-radius: 8px;
+    border: 2px solid gray;
+    max-width: 400px;
+    margin-bottom: 8px;
+    padding: 0 8px;
+    background-color: lightgray;
+}
+
+.scoreboard .goal.complete {
+    text-decoration: line-through;
+    background-color: lightgreen;
+}
+
+.instruction-goal {
+    padding-bottom: 16px;
+}
+
+.instruction-goal:target {
+    background-color: yellow;
+}
+
+.hint {
+    display: block;
+    margin-top: 8px;
+    border-left: 4px solid greenyellow;
+    padding-left: 16px;
+}
+
+.note {
+    display: block;
+    margin-top: 8px;
+    border-left: 4px solid coral;
+    padding-left: 16px;
+}
+
+/* Main */
+
+main {
+    overflow-y: auto;
+}
+
+/* Navbar */
+.navbar {
+    background: black;
+    color: white;
+    padding: 16px 64px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+.navbar .logo {
+    flex-grow: 1;
+}
+
+.navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    align-items: center;
+}
+
+.navbar li {
+    font-weight: bold;
+    font-size: 1.3em;
+    padding: 16px 32px;
+    border-left: 1px solid white;
+}
+
+.navbar li:first-child {
+    border-left: none;
+}
+
+.navbar a:hover {
+    color: greenyellow;
+    border-bottom: 1px solid greenyellow;
+}
+
+/* Content */
+.content {
+    font-size: 1.5em;
+    width: 800px;
+    margin: auto;
+    flex-grow: 1;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 32px;
+}
+
+/* Users */
+.user-search {
+    margin-bottom: 8px;
+}
+
+.user-search input[type="text"] {
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 1em;
+    flex-grow: 1;
+}
+
+.error {
+    border-radius: 4px;
+    padding: 4px 8px;
+    width: 100%;
+    word-wrap: break-word;
+    background-color: coral;
+}
+
+.sql {
+    margin-bottom: 0;
+    font-family: monospace;
+}
+
+.user-thumbnail {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    padding: 8px;
+    background: lightgray;
+    border: 2px solid gray;
+    border-radius: 8px;
+}
+
+.user-thumbnail img {
+    width: 128px;
+    height: 128px;
+    border: 4px solid greenyellow;
+    border-radius: 50%;
+    margin-right: 16px;
+}
+
+/* Profile */
+
+.user-profile img {
+    width: 200px;
+    border-radius: 50%;
+    border: 8px solid greenyellow;
+    margin-right: 32px;
+    height: 200px;
+}
+
+.user-search input[type="text"] {
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 1em;
+    flex-grow: 1;
+}
+
+form[action="/transaction"] {
+    display: flex;
+    flex-direction: column;
+}
+
+form[action="/transaction"] input {
+    font-size: 1em;
+    margin-bottom: 4px;
+}
+
+.profile-wrapper {
+    margin-right: 16px;
+}
+
+.transaction-wrapper {
+    flex-grow: 1;
+}
+
+.transaction-wrapper h3 {
+    margin-top: 0;
+}
+
+.transaction-wrapper h4 {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.transaction-list {
+    overflow-y: auto;
+    max-height: 600px;
+    margin-left: 16px;
+}
+
+.transaction {
+    border: 2px solid gray;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    padding: 16px;
+}
+
+#biography button {
+    margin-top: 8px;
+}
+
+#biography .edit-form {
+    display: none;
+}
+
+#biography.editing .edit-form {
+    display: initial;
+}
+
+#biography.editing .text {
+    display: none;
+}
+
+/* Support */
+#chat-wrapper {
+    height: 600px;
+    overflow-y: auto;
+}
+
+.message {
+    border-radius: 5px;
+    background: lightblue;
+    width: 400px;
+    padding: 4px 16px;
+    margin: 4px;
+    align-self: end;
+}
+
+.message.sent {
+    background: lightgray;
+    align-self: start;
+}
+
+.message img {
+    float: left;
+    margin-right: 8px;
+    height: 32px;
+    width: auto;
+    border-radius: 50%;
+    border: 4px solid greenyellow;
+}
+
+.message address {
+    margin-bottom: 4px;
+}
+
+.message p {
+    margin-bottom: 4px;
+}
+
+#chat-form input[type="text"] {
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 1em;
+    flex-grow: 1;
+}
+
+/* Set Identikey */
+.set_identikey {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.set_identikey input {
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 1em;
+    flex-grow: 1;
+    margin-bottom: 16px;
+}
+
+/* Flexbox */
+.container {
+    display: flex;
+}
+.container.vertical.reversed {
+    flex-direction: column-reverse;
+}
+.container.wrap {
+    flex-wrap: wrap;
+}
+.container.center {
+    align-items: center;
+}
+.container > aside {
+    flex-grow: 0;
+}
+.container > main {
+    flex-grow: 1;
+}
+.container.vertical {
+    flex-direction: column;
+}

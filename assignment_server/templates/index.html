@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Welcome to BIN/CA$H!</h1>
+<p>BIN/CA$H is the <b>hot</b>, <b>new</b>, and <b>super secure</b> way to send money to your friends!</p>
+<p>Check out our <a href="/users">users</a> page to get started!</p>
+
+<p>If you make a mistake, you can undo all your transactions here:</p>
+<form action="/reset" method="post">
+    <input type="submit" value="Undo transactions">
+</form>
+{% endblock %}

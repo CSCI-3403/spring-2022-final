@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="user-profile">
+    <h1>{{ user.username }}</h1>
+    <div class="container">
+        <div class="profile-wrapper container vertical">
+            <img src="/static/img/{{ user.profile_picture }}" class="user-picture"></img>
+            <h3>About Me</h3>
+            <!-- This displays these elements in reverse order so that user XSS attacks load after
+            the transaction form. This allows them to click the "Send money" button without setting
+            up an onload callback. -->
+            <div class="container vertical reversed">
+                <div>
+                    <h3>New Transaction</h3>
+                    <form id="transaction_form" action="/transaction" method="post">
+                        <input name="to" type="hidden" value="{{ user.username }}">
+                        <input name="amount" type="number" placeholder="Amount" min="0.01" step="0.01" value="10.00" required />
+                        <input id="send_money" type="submit" value="Send money">
+                    </form>
+                </div>
+                {% if user.username == identikey %}
+                <script>
+                /*
+                * This is a hack which allows students to click the 'Send money' button without redirecting to a
+                * new page, or infinitely looping on this one. This allows them to easily test their XSS attacks.
+                */
+                transaction_form.onsubmit = function() {
+                    let form_data = new FormData(transaction_form);
+                
+                    error = `
+                    <li class="flash-warning" onclick="this.classList.add('hidden')">
+                        You cannot send money to yourself<br/><i class="dismiss-text">click to dismiss</i>
+                    </li>`;
+                    document.querySelector('.flash-messages').insertAdjacentHTML('afterbegin', error);
+                    return false;
+                }
+                </script>
+                {% endif %}
+                <div id="biography">
+                    <div class="text container vertical">
+                        <div>{{ user.biography | safe }}</div>
+                        {% if user.username == identikey %}
+                        <button onclick="biography.classList.toggle('editing')">Edit Biography</button>
+                        {% endif %}
+                    </div>
+                    <div class="edit-form">
+                        <form id="biography_form" class="container vertical" method="post">
+                            <textarea name="biography">{{ user.biography }}</textarea>
+                            <input type="submit" value="Save">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="transaction-wrapper">
+            <h3>Transactions</h3>
+            {% if not transactions %}
+            This user has no transactions
+            {% endif %}
+            <ul class="transaction-list nostyle">
+                {% for t in transactions %}
+                <li class="transaction">
+                    {% if t.sender == user.username %}
+                        {% if t.amount >= 0 %}
+                            <h4><b class="red">${{ "{:.2f}".format(t.amount) }}</b> to {{ t.recipient }}
+                            <i>{{ t.time.strftime("%I:%M %p") }}</i></h4>
+                        {% else %}
+                            <h4><b class="green">${{ "{:.2f}".format(-t.amount) }}</b> from {{ t.recipient }}
+                            <i>{{ t.time.strftime("%I:%M %p") }}</i></h4>
+                        {% endif %}
+                    {% else %}
+                        {% if t.amount >= 0 %}
+                            <h4><b class="green">${{ "{:.2f}".format(t.amount) }}</b> from {{ t.sender }}
+                            <i>{{ t.time.strftime("%I:%M %p") }}</i></h4>
+                        {% else %}
+                            <h4><b class="red">${{ "{:.2f}".format(-t.amount) }}</b> to {{ t.sender }}
+                            <i>{{ t.time.strftime("%I:%M %p") }}</i></h4>
+                        {% endif %}
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

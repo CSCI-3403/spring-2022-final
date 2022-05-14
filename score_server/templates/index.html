@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Scores</h1>
+
+<table>
+  <tr>
+    <th>Identikey</th>
+    <th>Score</th>
+    <th>SQL Injection</th>
+    <th>SQL UNION</th>
+    <th>Client-side Security</th>
+    <th>CSRF</th>
+    <th>Stored XSS</th>
+  </tr>
+  {% for identikey, scores in results %}
+  {% set scores = scores if scores else '' %}
+  {% set score = ((scores | length) + 1) // 2 %}
+  <tr>
+    <td><a href="/student/{{ identikey }}">{{ identikey }}</a></td>
+    <td class="score-{{ score }}">{{ score }}</td>
+    <td class="{{ '0' in scores }}">-</td>
+    <td class="{{ '1' in scores }}">-</td>
+    <td class="{{ '2' in scores }}">-</td>
+    <td class="{{ '3' in scores }}">-</td>
+    <td class="{{ '4' in scores }}">-</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

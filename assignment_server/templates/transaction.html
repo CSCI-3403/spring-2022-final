@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="user-profile">
+    {% if not form.errors %}
+    <h1>Success</h1>
+
+    Sent ${{ "{:.2f}".format(amount) }} to {{ recipient }}!
+    {% else %}
+    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+{% endblock %}

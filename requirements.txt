@@ -1,0 +1,9 @@
+click
+flask
+flask-login
+flask-wtf
+selenium
+selenium-wire
+flask-sqlalchemy
+requests
+pytz
