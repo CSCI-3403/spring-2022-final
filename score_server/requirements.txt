@@ -1,0 +1,8 @@
+click
+flask
+flask-login
+flask-wtf
+flask-sqlalchemy
+gunicorn
+requests
+pytz

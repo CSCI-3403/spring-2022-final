@@ -1,4 +1,3 @@
-import csv
 from datetime import datetime, timedelta
 import logging
 import sys
@@ -122,14 +121,14 @@ def history() -> View:
 
 @click.command()
 @click.option('--debug', is_flag=True)
-@click.option('--port', type=int, default=8081)
+@click.option('--port', type=int, default=80)
 def main(debug: bool, port: int) -> None:
     if debug:
         logging.getLogger().setLevel(logging.DEBUG)
 
     log.info('Starting grading server on port {}'.format(port))
 
-    app.run(threaded=True, debug=debug, port=port)
+    app.run("0.0.0.0", debug=debug, port=port)
 
 if __name__ == '__main__':
     main()

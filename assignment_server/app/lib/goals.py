@@ -4,7 +4,7 @@ import requests
 
 from flask import flash, request
 
-SERVER_URL = 'http://127.0.0.1:8081'
+SERVER_URL = 'http://score'
 
 @dataclass
 class Goal:

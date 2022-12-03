@@ -34,7 +34,7 @@ app.secret_key = secrets['secret_key']
 db = DatabaseManager()
 
 # Init goals
-goals = get_all_goals()
+# goals = get_all_goals()
 
 # Init logging
 log = logging.getLogger(__name__)
@@ -253,7 +253,7 @@ def set_identikey() -> View:
 @click.option('--port', type=int, default=80)
 def main(debug: bool, port: int) -> None:
     log.info('Running on port {}'.format(port))
-    app.run(threaded=True, debug=debug, port=port)
+    app.run("0.0.0.0", debug=debug, port=port)
 
 if __name__ == "__main__":
     main()

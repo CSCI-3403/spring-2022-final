@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  assignment:
+    build: assignment_server/
+    ports:
+      - "80:80/tcp"
+    depends_on:
+      - "score"
+    restart: always
+    networks:
+      final:
+    volumes:
+      - ./assignment_server/app:/app
+    command: "gunicorn --bind 0.0.0.0:80 app:app --reload"
+
+  score:
+    build: score_server/
+    ports:
+      - "8080:80/tcp"
+    expose:
+      - "80"
+    restart: always
+    networks:
+      final:
+    volumes:
+      - ./score_server/app:/app
+
+  support:
+    build: support_server/
+    depends_on:
+      - webdriver
+    ports:
+      - "8081:80/tcp"
+    expose:
+      - "80"
+    restart: always
+    networks:
+      final:
+    volumes:
+      - ./support_server/app:/app
+  
+  webdriver:
+    image: selenium/standalone-firefox:4.7.0-20221202
+    ports:
+      - "7900:7900"
+      # - "4444:4444"
+    expose:
+      - "4444"
+    networks:
+      final:
+    # shm-size: "2g"
+
+networks:
+  final:
+    driver: bridge

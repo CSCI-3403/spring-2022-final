@@ -10,6 +10,7 @@ from flask import Flask, jsonify, request
 from seleniumwire import webdriver # type: ignore
 from selenium.common.exceptions import TimeoutException, InvalidArgumentException, UnexpectedAlertPresentException
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from werkzeug.wrappers import Response
 
 View = Union[Response, str, Tuple[str, int]]
@@ -33,8 +34,15 @@ class DriverPool:
     def __init__(self, n_drivers: int, headless: bool = True) -> None:
         options = Options()
         options.headless = headless
+        # binary = FirefoxBinary('/usr/local/bin/geckodriver')
         options.set_preference('dom.webnotifications.enabled', False)
-        self.drivers = [webdriver.Firefox(options=options) for _ in range(n_drivers)]
+        driver = webdriver.Remote(
+            command_executor='http://webdriver:4444',
+            options=options,
+        )
+        # self.drivers = [webdriver.Firefox(firefox_binary=binary, options=options) for _ in range(n_drivers)]
+        # self.drivers = [webdriver.Firefox(options=options) for _ in range(n_drivers)]
+        self.drivers = [driver]
     
     @contextmanager
     def _get_free_driver(self) -> Iterator[Optional[webdriver.Firefox]]:
@@ -111,20 +119,21 @@ def visit() -> View:
 
 @click.command()
 @click.option('--debug', is_flag=True)
-@click.option('--port', type=int, default=8082)
+@click.option('--port', type=int, default=80)
 def main(debug: bool, port: int) -> None:
     global drivers
-    if debug:
-        # When running locally, a single browser with the UI enabled is fine
-        log.setLevel(logging.DEBUG)
-        drivers = DriverPool(1, headless=False)
-    else:
-        # When running in prod, use 5 headless browsers for concurrency
-        drivers = DriverPool(5)
+    drivers = DriverPool(1)
+    # if debug:
+    #     # When running locally, a single browser with the UI enabled is fine
+    #     log.setLevel(logging.DEBUG)
+    #     drivers = DriverPool(1, headless=False)
+    # else:
+    #     # When running in prod, use 5 headless browsers for concurrency
+    #     drivers = DriverPool(5)
 
     log.info('Starting support server on http://127.0.0.1:{}'.format(port))
 
-    app.run(threaded=True, debug=debug, port=port)
+    app.run("0.0.0.0", debug=debug, port=port)
 
 if __name__ == '__main__':
     main()

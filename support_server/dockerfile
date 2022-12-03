@@ -1,0 +1,14 @@
+FROM python:3.10-alpine
+
+WORKDIR /app
+
+# Needed to install Selenium
+RUN apk update
+RUN apk add gcc musl-dev
+
+ADD requirements.txt .
+RUN pip install -r requirements.txt
+
+ADD app .
+
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
