@@ -1,16 +1,12 @@
-from contextlib import contextmanager
 import logging
+import socket
 import sys
-from threading import Lock
-from time import sleep
-from typing import Any, Iterator, Optional, Tuple, Union
+from typing import Any, Dict, Tuple, Union
 
 import click
-from flask import Flask, jsonify, request
+from flask import abort, Flask, render_template, request
 from seleniumwire import webdriver # type: ignore
-from selenium.common.exceptions import TimeoutException, InvalidArgumentException, UnexpectedAlertPresentException
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.common.exceptions import TimeoutException, InvalidArgumentException, InvalidSessionIdException
 from werkzeug.wrappers import Response
 
 View = Union[Response, str, Tuple[str, int]]
@@ -23,115 +19,76 @@ logging.getLogger('seleniumwire.backend').disabled = True
 logging.getLogger('seleniumwire.handler').disabled = True
 logging.getLogger('seleniumwire.server').disabled = True
 
+
 # Set up app
 app = Flask(__name__)
 
-class DriverPool:
-    lock = Lock()
-    retries = 4
-    retry_wait = .5
+# SeleniumWire forwards web requests through a local proxy, which is how it modifies requests.
+# Because we are running SeleniumWire in a separate container from the actual browser, we need to
+# manually specify that requests should be proxied through this container.
+ip_addr = socket.gethostbyname(socket.gethostname())
+seleniumwire_options = {
+    'addr': ip_addr,
+    # 'port': 3128,
+}
 
-    def __init__(self, n_drivers: int, headless: bool = True) -> None:
-        options = Options()
-        options.headless = headless
-        # binary = FirefoxBinary('/usr/local/bin/geckodriver')
-        options.set_preference('dom.webnotifications.enabled', False)
-        driver = webdriver.Remote(
-            command_executor='http://webdriver:4444',
-            options=options,
-        )
-        # self.drivers = [webdriver.Firefox(firefox_binary=binary, options=options) for _ in range(n_drivers)]
-        # self.drivers = [webdriver.Firefox(options=options) for _ in range(n_drivers)]
-        self.drivers = [driver]
+firefox_options = webdriver.FirefoxOptions()
+firefox_options.set_capability('unhandledPromptBehavior', 'dismiss')
+
+def build_driver():
+    driver = webdriver.Remote(
+        command_executor='http://webdriver:4444',
+        seleniumwire_options=seleniumwire_options,
+        options=firefox_options,
+    )
+    driver.set_page_load_timeout(3)
+    return driver
+
+driver = build_driver()
     
-    @contextmanager
-    def _get_free_driver(self) -> Iterator[Optional[webdriver.Firefox]]:
-        for _ in range(self.retries):
-            try:
-                driver = self.drivers.pop()
-                break
-            except IndexError:
-                sleep(self.retry_wait)
-        else:
-            driver = None
+def get(url: str, headers: Dict[str, str]) -> None:
+    global driver
 
-        try:
-            yield driver
-        finally:
-            if driver is not None:
-                self.drivers.append(driver)
+    try:
+        # Set the StudentIdentikey header for all outgoing requests
+        def interceptor(request: Any) -> None:
+            for k, v in headers.items():
+                request.headers[k] = v
 
-    def get(self, url: str, identikey: str) -> str:
-        with self._get_free_driver() as driver:
-            if driver is None:
-                return 'busy'
+        driver.request_interceptor = interceptor
+        driver.get(url)
 
-            # Load for 6 seconds at max. Why 6? Made it up. Everything should be <10ms, unless
-            # someone put an infinite redirect in their XSS or something.
-            driver.set_page_load_timeout(6)
-            try:
-                # Set the StudentIdentikey header for all outgoing requests
-                def interceptor(request: Any) -> None:
-                    request.headers['StudentIdentikey'] = identikey
-
-                driver.request_interceptor = interceptor
-                # Get the URL. This might fail if the previous student has an alert popup open, so
-                # we catch that error and retry until it works. I don't think this is possible to
-                # loop infinitely, but maybe. Hasn't happened yet.
-                while True:
-                    try:
-                        driver.get(url)
-                        break
-                    except UnexpectedAlertPresentException:
-                        pass
-            except InvalidArgumentException:
-                log.exception('Bad url')
-                return 'The URL was invalid'
-            except TimeoutException:
-                log.exception('Timeout')
-                driver.get('')
-                return 'timeout'
-
-            return 'success'
-
-
-drivers: DriverPool = None # type: ignore
+    except InvalidArgumentException as e:
+        log.exception("Invalid URL")
+        abort(400, 'Invalid URL')
+    except TimeoutException as e:
+        log.exception("Timeout")
+        abort(400, 'Request took too long, and timed out')
+    except Exception as e:
+        log.exception("Generic exception")
+        abort(500, f'Internal server error: {e}')
 
 @app.route('/')
 def index() -> View:
-    return 'ok'
+    return render_template("index.html")
 
-@app.route('/visit')
+@app.route('/visit', methods=["POST"])
 def visit() -> View:
     url = request.json.get('url') # type: ignore
-    identikey = request.json.get('identikey') # type: ignore
+    headers = request.json.get('headers', {}) # type: ignore
 
-    if not url or not identikey:
-        log.error('Did not get URL or identikey')
+    if not url:
+        abort(400, "Missing required URL parameter")
 
-        # This should never happen unless there is a bug somewhere
-        return jsonify({ 'status': 'internal error (reach out to instructor)' }) # type: ignore
+    get(url, headers)
 
-    log.info('{} requested URL: {}'.format(identikey, url))
-    status = drivers.get(url, identikey)
-
-    return jsonify({ 'status': status }) # type: ignore
+    return "Success"
 
 @click.command()
 @click.option('--debug', is_flag=True)
 @click.option('--port', type=int, default=80)
 def main(debug: bool, port: int) -> None:
-    global drivers
-    drivers = DriverPool(1)
-    # if debug:
-    #     # When running locally, a single browser with the UI enabled is fine
-    #     log.setLevel(logging.DEBUG)
-    #     drivers = DriverPool(1, headless=False)
-    # else:
-    #     # When running in prod, use 5 headless browsers for concurrency
-    #     drivers = DriverPool(5)
-
-    log.info('Starting support server on http://127.0.0.1:{}'.format(port))
+    log.info('Starting support server on http://0.0.0.0:{}'.format(port))
 
     app.run("0.0.0.0", debug=debug, port=port)
 

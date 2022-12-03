@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 import requests
 
-SUPPORT_URL = 'http://127.0.0.1:8082'
+SUPPORT_URL = 'http://support'
 URL_REGEX = r'(https?://)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)'
 
 def find_link(message: str) -> Optional[str]:
@@ -26,8 +26,8 @@ def handle_message(message: str, identikey: str) -> str:
     if not url:
         return 'I do not understand. Can you send me a link to the page you are having problems with?'
     
-    if urlparse(url).netloc != 'final.csci3403.com':
-        return 'I\'m sorry, but I will only visit URLs from final.csci3403.com.'
+    # if urlparse(url).netloc != 'final.csci3403.com':
+    #     return 'I\'m sorry, but I will only visit URLs from final.csci3403.com.'
 
     response = requests.get('{}/visit'.format(SUPPORT_URL), json={
         'url': url,

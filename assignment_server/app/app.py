@@ -34,7 +34,7 @@ app.secret_key = secrets['secret_key']
 db = DatabaseManager()
 
 # Init goals
-# goals = get_all_goals()
+goals = get_all_goals()
 
 # Init logging
 log = logging.getLogger(__name__)

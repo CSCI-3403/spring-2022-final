@@ -1,7 +1,7 @@
 __pycache__
 .mypy_cache
 .vscode
-*.db*
+*.sqlite3*
 secrets.json
 geckodriver.log
 logs/

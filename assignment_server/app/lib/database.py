@@ -44,7 +44,7 @@ class DatabaseManager:
     sessions: Dict[str, scoped_session] = {}
 
     def new_session(self, identikey: str) -> scoped_session:
-        engine_url = 'sqlite:///dbs/{}.db'.format(identikey)
+        engine_url = 'sqlite:///dbs/{}.sqlite3'.format(identikey)
         engine = create_engine(engine_url)
         Base.metadata.create_all(bind=engine)
 
