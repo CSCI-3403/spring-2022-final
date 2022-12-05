@@ -1,6 +1,7 @@
 import logging
 import socket
 import sys
+from threading import Lock
 from typing import Any, Dict, Tuple, Union
 
 import click
@@ -41,25 +42,29 @@ driver = webdriver.Remote(
     options=firefox_options,
 )
 driver.set_page_load_timeout(3)
+lock = Lock()
 
 def get(url: str, headers: Dict[str, str]) -> None:
-    # Set the StudentIdentikey header for all outgoing requests
-    def interceptor(request: Any) -> None:
-        for k, v in headers.items():
-            request.headers[k] = v
-    driver.request_interceptor = interceptor
+    # We use a lock to prevent weird race conditions where the interceptor gets set to a different
+    # student's headers before the request makes it through
+    with lock:
+        # Set the StudentIdentikey header for all outgoing requests
+        def interceptor(request: Any) -> None:
+            for k, v in headers.items():
+                request.headers[k] = v
+        driver.request_interceptor = interceptor
 
-    try:
-        driver.get(url)
-    except InvalidArgumentException as e:
-        log.exception("Invalid URL")
-        abort(400, 'Invalid URL')
-    except TimeoutException as e:
-        log.exception("Timeout")
-        abort(400, 'Request took too long, and timed out')
-    except Exception as e:
-        log.exception("Generic exception")
-        abort(500, f'Internal server error: {e}')
+        try:
+            driver.get(url)
+        except InvalidArgumentException as e:
+            log.exception("Invalid URL")
+            abort(400, 'Invalid URL')
+        except TimeoutException as e:
+            log.exception("Timeout")
+            abort(400, 'Request took too long, and timed out')
+        except Exception as e:
+            log.exception("Generic exception")
+            abort(500, f'Internal server error: {e}')
 
 @app.route('/')
 def index() -> View:

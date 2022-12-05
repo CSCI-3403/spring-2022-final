@@ -151,7 +151,7 @@ def transaction() -> View:
             # ...however, if the request did not come from this page (which we can tell from the 
             # Referer header) then it came from a CSRF attack. Or they removed the Referer header,
             # but what are the chances of that?
-            if 'final.csci3403.com' not in referer:
+            if 'final.csci3403.com' not in referer and 'burp' not in referer:
                 accomplish_goal(identikey, goals[3], False, 'Referer: {}'.format(referer))
 
             flash('You cannot send money to yourself', category='warning')
@@ -242,6 +242,7 @@ def set_identikey() -> View:
     form = IdentikeyForm()
 
     if form.validate_on_submit():
+        login(form.identikey.data)
         history(form.identikey.data, 'Logged in')
         session['identikey'] = form.identikey.data
         return redirect(url_for('instructions'))

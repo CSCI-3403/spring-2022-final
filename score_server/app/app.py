@@ -20,10 +20,10 @@ logging.getLogger('werkzeug').disabled = True
 
 # Set up app
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'qwer'
+app.config['SECRET_KEY'] = 'qweqwerasdbcbbsdfgr'
 
 # Set up database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scores.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scores.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
@@ -62,14 +62,6 @@ def login(identikey: str) -> View:
     student = db.session.query(Student).filter(Student.identikey == identikey).first()
     if not student:
         return jsonify({ 'error': 'No student with that identikey' })
-    
-    now = datetime.now() - timedelta(hours=6)
-    time_until_start = student.start - now
-    if time_until_start.total_seconds() > 0:
-        return jsonify({ 'error': 'Exam will become available at: {}'.format(student.start.strftime('%m/%d %I:%M%p')) })
-
-    if now > student.end:
-        return jsonify({ 'error': 'Exam has closed' })
 
     return jsonify({})
 
