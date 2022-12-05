@@ -35,9 +35,11 @@
   {% endfor %}
 </div>
 {% elif error %}
-<div class="error">
-  {{ error }}
-  <p class="sql">{{ sql }}</p>
+<div class="message is-danger mt-4">
+  <div class="message-body is-family-monospace">
+    <p>Error: {{ error }}</p>
+    <p>{{ sql }}</p>
+  </div>
 </div>
 {% endif %}
 {% endblock %}
