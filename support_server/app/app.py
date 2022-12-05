@@ -29,35 +29,28 @@ app = Flask(__name__)
 ip_addr = socket.gethostbyname(socket.gethostname())
 seleniumwire_options = {
     'addr': ip_addr,
-    # 'port': 3128,
+    'port': 3128,
 }
 
 firefox_options = webdriver.FirefoxOptions()
 firefox_options.set_capability('unhandledPromptBehavior', 'dismiss')
 
-def build_driver():
-    driver = webdriver.Remote(
-        command_executor='http://webdriver:4444',
-        seleniumwire_options=seleniumwire_options,
-        options=firefox_options,
-    )
-    driver.set_page_load_timeout(3)
-    return driver
+driver = webdriver.Remote(
+    command_executor='http://webdriver:4444',
+    seleniumwire_options=seleniumwire_options,
+    options=firefox_options,
+)
+driver.set_page_load_timeout(3)
 
-driver = build_driver()
-    
 def get(url: str, headers: Dict[str, str]) -> None:
-    global driver
+    # Set the StudentIdentikey header for all outgoing requests
+    def interceptor(request: Any) -> None:
+        for k, v in headers.items():
+            request.headers[k] = v
+    driver.request_interceptor = interceptor
 
     try:
-        # Set the StudentIdentikey header for all outgoing requests
-        def interceptor(request: Any) -> None:
-            for k, v in headers.items():
-                request.headers[k] = v
-
-        driver.request_interceptor = interceptor
         driver.get(url)
-
     except InvalidArgumentException as e:
         log.exception("Invalid URL")
         abort(400, 'Invalid URL')

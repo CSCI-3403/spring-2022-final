@@ -34,7 +34,8 @@ services:
     ports:
       - "8081:80/tcp"
     expose:
-      - "0-65535"
+      - "80"
+      - "3128"
     restart: always
     networks:
       final:
@@ -46,7 +47,7 @@ services:
     image: selenium/standalone-firefox:4.7.0-20221202
     environment:
       - SE_NODE_MAX_SESSIONS=2
-      - SE_NODE_SESSION_TIMEOUT=10
+      - SE_NODE_SESSION_TIMEOUT=86400
     ports:
       - "7900:7900"
       - "4444:4444"
