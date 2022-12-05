@@ -1,5 +1,6 @@
 import logging
 import json
+from pathlib import Path
 import sqlite3
 import sys
 from typing import Any, Dict, Optional, Tuple, Union
@@ -22,13 +23,10 @@ class InsecureForm(FlaskForm):
     class Meta:
         csrf = False
 
-with open('secrets.json') as f:
-    secrets = json.loads(f.read())
-
 # Init app
 app = Flask(__name__)
 app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.secret_key = secrets['secret_key']
+app.secret_key = Path('secret_key.secret').read_text()
 
 # Init database
 db = DatabaseManager()

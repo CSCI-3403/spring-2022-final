@@ -2,7 +2,7 @@ __pycache__
 .mypy_cache
 .vscode
 *.sqlite3*
-secrets.json
+*.secret
 geckodriver.log
 logs/
 nohup.out
