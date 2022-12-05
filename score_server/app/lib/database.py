@@ -12,7 +12,6 @@ class Score(db.Model): #type: ignore
     identikey: str = db.Column(String(16), ForeignKey('students.identikey'), primary_key=True, nullable=False)
     goal: int = db.Column(Integer, ForeignKey('goals.id'), primary_key=True, nullable=False)
     time: datetime = db.Column(DateTime, nullable=False)
-    cheating_detected: bool = db.Column(Boolean, nullable=False)
     comment: str = db.Column(Text, nullable=False)
 
 @dataclass
@@ -20,8 +19,6 @@ class Student(db.Model): #type: ignore
     __tablename__ = 'students'
 
     identikey: str = db.Column(db.String(16), primary_key=True, nullable=False)
-    start: datetime = db.Column(DateTime, nullable=False)
-    end: datetime = db.Column(DateTime, nullable=False)
     scores = db.relationship(Score)
 
 @dataclass

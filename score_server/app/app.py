@@ -46,7 +46,7 @@ def index() -> View:
 
 @app.route('/student/<identikey>')
 def student(identikey: str) -> View:
-    query = (db.session.query(Goal.id, Score.cheating_detected, Score.comment, Score.time)
+    query = (db.session.query(Goal.id, Score.comment, Score.time)
             .outerjoin(Score, Score.goal==Goal.id)
             .filter(Score.identikey==identikey))
     goals = query.all()
@@ -61,7 +61,7 @@ def get_goals() -> View:
 def login(identikey: str) -> View:
     student = db.session.query(Student).filter(Student.identikey == identikey).first()
     if not student:
-        return jsonify({ 'error': 'No student with that identikey' })
+        return jsonify({ 'error': 'Invalid identikey' })
 
     return jsonify({})
 
@@ -69,7 +69,6 @@ def login(identikey: str) -> View:
 def update(identikey: str) -> View:
     try:
         goal = int(request.json['goal']) # type: ignore
-        cheating_detected = bool(request.json['cheating_detected']) # type: ignore
         comment = str(request.json['comment']) # type: ignore
     except KeyError:
         abort(400)
@@ -85,7 +84,6 @@ def update(identikey: str) -> View:
         identikey=identikey,
         goal=int(goal),
         time=datetime.now(pytz.timezone('US/Mountain')),
-        cheating_detected=cheating_detected,
         comment=comment)
     db.session.merge(score)
     db.session.commit()
@@ -94,7 +92,7 @@ def update(identikey: str) -> View:
 
 @app.route('/status/<identikey>')
 def score(identikey: str) -> View:
-    query = (db.session.query(Goal.id, Score.cheating_detected, Score.comment, Score.time)
+    query = (db.session.query(Goal.id, Score.comment, Score.time)
             .outerjoin(Score, Score.goal==Goal.id)
             .filter(Score.identikey==identikey))
     return jsonify([q._asdict() for q in query.all()])

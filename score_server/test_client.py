@@ -15,7 +15,6 @@ def score(host: str, port: int) -> None:
 def update(host: str, port: int) -> None:
     response = requests.post(f'http://{host}:{port}/update/test_student2', json={
         'challenge': 1,
-        'cheating_detected': False,
         'comment': 'asdf'
     })
     response.raise_for_status()
