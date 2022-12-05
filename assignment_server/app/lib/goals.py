@@ -35,7 +35,7 @@ def accomplish_goal(identikey: str, goal: Goal, comment: str) -> Any:
     response.raise_for_status()
 
     history(identikey, 'Completed goal #{}: {}'.format(goal.id, comment))
-    flash('Completed a goal: {}!'.format(goal.name), category='goal')
+    flash('Completed a goal: {}!'.format(goal.name), category='Success')
 
     return response.json()
 

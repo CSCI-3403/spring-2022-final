@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="user-profile">
-    {% if not form.errors %}
-    <h1>Success</h1>
-
-    Sent ${{ "{:.2f}".format(amount) }} to {{ recipient }}!
-    {% else %}
+{% if not form.errors %}
+<div class="box has-background-success-light">
+    <h1 class="title">Success</h1>
+    <p class="block">Sent ${{ "{:.2f}".format(amount) }} to {{ recipient }}!</p>
+    <a class="button is-success" href="/profile/{{ recipient }}">Back</a>
+</div>
+{% else %}
+<div class="box has-background-error-light">
     <ul class="errors">
         {% for field_name, field_errors in form.errors|dictsort if field_errors %}
             {% for error in field_errors %}
@@ -14,7 +16,6 @@
             {% endfor %}
         {% endfor %}
     </ul>
-    {% endif %}
 </div>
-
+{% endif %}
 {% endblock %}

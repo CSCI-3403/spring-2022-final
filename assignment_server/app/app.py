@@ -154,7 +154,7 @@ def transaction() -> View:
             if 'final.csci3403.com' not in referer and 'burp' not in referer:
                 accomplish_goal(identikey, goals[3], 'Referer: {}'.format(referer))
 
-            flash('You cannot send money to yourself', category='warning')
+            flash('You cannot send money to yourself', category='Warning')
             return redirect(url_for('profile', username=identikey))
 
         # If they sent a negative amount, mark that goal as complete!

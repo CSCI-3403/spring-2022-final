@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Users</h1>
+<h1 class="subtitle">Users</h1>
 <form class="user-search container" action="users" method="GET">
   <div class="field has-addons">
     <div class="control is-expanded">
@@ -18,7 +18,7 @@
   {% for result in results %}
   <a href="profile/{{ result.username }}" class="nostyle">
     <div class="card mt-3">
-      <div class="card-content">
+      <div class="card-content p-2">
         <div class="media">
           <div class="media-left">
             <figure class="image is-64x64">

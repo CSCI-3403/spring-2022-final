@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">Welcome to BIN/CA$H!</h1>
-<p class="block">BIN/CA$H is the <b>hot</b>, <b>new</b>, and <b>super secure</b> way to send money to your friends!</p>
-<p class="block">Check out our <a href="/users">users</a> page to get started!</p>
-<p class="block">If you make a mistake, you can reset the page here:</p>
-<form action="/reset" method="post">
-    <input class="button is-warning" type="submit" value="Reset page">
-</form>
+<section class="box">
+    <h1 class="title">Welcome to BIN/CA$H!</h1>
+    <p class="block">BIN/CA$H is the <b>hot</b>, <b>new</b>, and <b>super secure</b> way to send money to your friends!</p>
+    <p class="block">Check out our <a href="/users">users</a> page to get started!</p>
+    <p class="block">If you make a mistake, you can reset the page here:</p>
+    <form action="/reset" method="post">
+        <input class="button is-warning" type="submit" value="Reset page">
+    </form>
+</section>
 {% endblock %}

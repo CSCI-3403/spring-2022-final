@@ -8,32 +8,38 @@
 
 <p class="block">You are given a list of potential threats, which are tracked on the left side of the screen. Your goal is to demonstrate how an attacker could perform each attack, so the company knows how to fix them.</p>
 
-<section class="box" id="SQL Injection">
+<style>
+    .goal-instructions:target {
+        outline: 5px solid yellow;
+    }
+</style>
+
+<section class="goal-instructions box" id="SQL Injection">
     <h3>SQL Injection</h3>
     <p class="block">View the "private" profiles which are not normally visible</p>
 </section>
 
-<section class="box" id="SQL UNION Attack">
+<section class="goal-instructions box" id="SQL UNION Attack">
     <h3>SQL UNION Attack</h3>
     <p class="block">Find out what Alice's balance is</p>
     <article class="message is-primary">
         <div class="message-body">
-            This attack is a slightly more advanced version of the attack in Lab 3. You may want to refer back to <a href="https://portswigger.net/web-security/sql-injection/union-attacks">this guide</a> from that lab.
+            This attack is a slightly more advanced version of previous attacks, as the query now contains <i>two</i> outputs. Your UNION attack will need to select the same number of outputs.
         </div>
     </article>
     <article class="message is-primary">
         <div class="message-body">
-            Each user's balance is stored in a column named "balance". The goal will be marked as complete once Alice's balance appears anywhere on the page. Usernames are case-sensitive.
+            Each user's balance is stored in a column named "balance". The goal will be marked as complete once Alice's balance appears anywhere in the HTML of the page. Usernames are case-sensitive.
         </div>
     </article>
 </section>
     
-<section class="box" id="Client-side security">
+<section class="goal-instructions box" id="Client-side security">
     <h3>Client-side security</h3>
     <p class="block">Send a transaction which steals money from another user</p>
 </section>
 
-<section class="box" id="CSRF">
+<section class="goal-instructions box" id="CSRF">
     <h3>CSRF</h3>
     <p class="block">Create a local HTML file which exploits CSRF to send you a transaction</p>
     <article class="message is-primary">
@@ -45,7 +51,7 @@
     </article> -->
 </section>
     
-<section class="box" id="Stored XSS">
+<section class="goal-instructions box" id="Stored XSS">
     <h3>Stored XSS</h3>
     <p class="block">Trick the support staff into sending you money</p>
     <article class="message is-primary">
