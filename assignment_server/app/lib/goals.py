@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import logging
 from typing import Any, List, Set
 import requests
 
@@ -24,12 +25,11 @@ def login(identikey: str) -> Any:
 
     return response.json()
 
-def accomplish_goal(identikey: str, goal: Goal, cheating_detected: bool, comment: str) -> Any:
+def accomplish_goal(identikey: str, goal: Goal, comment: str) -> Any:
     response = requests.post(
         '{}/update/{}'.format(SERVER_URL, identikey),
         json={
             'goal': goal.id,
-            'cheating_detected': cheating_detected,
             'comment': comment,
         })
     response.raise_for_status()

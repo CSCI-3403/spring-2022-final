@@ -2,60 +2,58 @@
 <html>
   <head>
     <title>{{title}}</title>
-    <link href="/static/main.css" rel="stylesheet" media="screen">
+    <link href="/static/bulma.min.css" rel="stylesheet" media="screen">
+    <!-- <link href="/static/main.css" rel="stylesheet" media="screen"> -->
   </head>
-  <body class="container horizontal">
-    {% block scoreboard %}
-    <aside class="scoreboard container vertical center">
-      <h1>{{ identikey }}</h1>
-      <a href="/instructions"><button>Instructions</button></a>
-      <ul class="nostyle">
-        {% for goal in goals %}
-        <a class="nostyle" href="/instructions#{{ goal.name }}">
-          <li class="goal {{ 'complete' if goal.id in completed else 'incomplete' }}">
-            <h2>{{ goal.name }}: {{ goal.points }} points</h2>
-            <p>{{ goal.description }}</p>
-          </li>
-        </a>
-        {% endfor %}
-      </ul>
-    </aside>
-    {% endblock %}
-    <main class="container vertical">
-      {% block navbar %}
-      <header class="navbar">
-        <div class="container horizontal">    
-          <h1 class="logo"><a href="/" class="nostyle">BIN/CA$H</a></h1>
-          <nav>
-            <ul class="container horizontal">
-              <li>
-                <a href="/" class="nostyle">Home</a>
-              </li>
-              <li>
-                <a href="/users" class="nostyle">Users</a>
-              </li>
-              <li>
-                <a href="/profile/{{ identikey }}" class="nostyle">Profile</a>
-              </li>
-              <li>
-                <a href="/support" class="nostyle">Support</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+  <body class="is-primary is-fullheight">
+    <section class="columns" style="margin-top: 0">
+      {% block scoreboard %}
+      <aside class="column is-one-fifth p-5 m-0 box" style="height: 100vh">
+        <h1 class="title has-text-centered">{{ identikey }}</h1>
+        <a class="block button is-fullwidth is-info" href="/instructions">Instructions</a>
+        <ul>
+          {% for goal in goals %}
+          <a class="box" href="/instructions#{{ goal.name }}">
+            <li class="goal {{ 'is-success' if goal.id in completed }}">
+              <h2>{{ goal.name }}</h2>
+              <p>{{ goal.description }}</p>
+            </li>
+          </a>
+          {% endfor %}
+        </ul>
+      </aside>
       {% endblock %}
-      
-      <ul class="flash-messages">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-          <li class="flash-{{ category }}" onclick="this.classList.add('hidden')">{{ message | safe }}<br/><i class="dismiss-text">click to dismiss</i></li>
-        {% endfor %}
-      {% endwith %}
-      </ul>
-      <div class="container vertical content">
-          {% block content %}{% endblock %}
-      </div>
-    </main>
+      <main class="column">
+        <div class="columns is-centered">
+          <div class="column is-half">
+            {% block navbar %}
+            <header class="navbar">
+              <div class="navbar-brand">    
+                <h1 class="title m-0 has-text-justified"><a href="/" class="nostyle">BIN/CA$H</a></h1>
+              <div class="navbar-menu is-active">    
+                <div class="navbar-start">
+                  <a class="button is-link ml-2 navbar-item" href="/" class="nostyle">Home</a>
+                  <a class="button is-link ml-2 navbar-item" href="/users" class="nostyle">Users</a>
+                  <a class="button is-link ml-2 navbar-item" href="/profile/{{ identikey }}" class="nostyle">Profile</a>
+                  <a class="button is-link ml-2 navbar-item" href="/support" class="nostyle">Support</a>
+                </div>
+              </div>
+            </header>
+            {% endblock %}
+            
+            <ul class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                <li class="flash-{{ category }}" onclick="this.classList.add('hidden')">{{ message | safe }}<br/><i class="dismiss-text">click to dismiss</i></li>
+              {% endfor %}
+            {% endwith %}
+            </ul>
+            <div class="box">
+                {% block content %}{% endblock %}
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
   </body>
 </html>

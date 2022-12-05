@@ -1,46 +1,109 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Support Chat</h1>
+<h1 class="title">Support Chat</h1>
 
-<div id="chat-wrapper">
-    <div id="chat-container" class="chat container vertical">
-        <div class="message received">
-            <img src="/static/img/support.jpg">
-            <address>support</address>
-            <p>Hi! I'm <b>Johnny Link-Clicker</b>, your support representative. Ask me any questions you have! If your message includes a link, I will read it.</p>
+<div id="chat-wrapper" class="mb-4 p-2" style="max-height: 600px; overflow-y: scroll; overflow-x: clip;">
+    <div id="chat-container">
+        <div class="card mt-4 mr-6" style="border-radius: 10px">
+            <div class="card-content p-4">
+                <div class="media mb-1">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img class="is-rounded" src="/static/img/support.jpg">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-6">Support</p>
+                        <address class="subtitle is-6">@support</address>
+                    </div>
+                </div>
+                
+                <div class="content">
+                    Hi! I'm <b>Johnny Link-Clicker</b>, your personal support representative! Ask me any questions you have. If your question contains a link, I will even click it!
+                </div>
+            </div>
         </div>
-
+        
         {% for message in messages %}
         {% if message.from_support %}
-            <div class="message received }}">
-                <img src="/static/img/support.jpg">
-                <address>support</address>
-                <p>{{ message.message }}</p>
+        <div class="card mt-4 mr-6" style="border-radius: 10px">
+            <div class="card-content p-4">
+                <div class="media mb-1">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img class="is-rounded" src="/static/img/support.jpg">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-6">Support</p>
+                        <address class="subtitle is-6">@support</address>
+                    </div>
+                </div>
+                
+                <div class="content">
+                    {{ message.message }}
+                </div>
             </div>
-            {% else %}
-            <div class="message sent">
-                <img src="/static/img/user.jpg">
-                <address>{{ identikey }}</address>
-                <p>{{ message.message }}</p>
+        </div>
+        {% else %}
+        <div class="card mt-4 ml-6 has-background-info-light" style="border-radius: 10px">
+            <div class="card-content p-4">
+                <div class="media mb-1">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img class="is-rounded" src="/static/img/user.jpg">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-6">{{ identikey }}</p>
+                        <address class="subtitle is-6">@{{ identikey }}</address>
+                    </div>
+                </div>
+                
+                <div class="content">
+                    {{ message.message }}
+                </div>
             </div>
+        </div>
         {% endif %}
         {% endfor %}
-
+        
         <template id="message-template">
-        <div class="message">
-            <img src="">
-            <address></address>
-            <p></p>
-        </div>
+            <div class="card mt-4" style="border-radius: 10px">
+                <div class="card-content p-4">
+                    <div class="media mb-1">
+                        <div class="media-left">
+                            <figure class="image is-48x48">
+                                <img class="is-rounded">
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-6"></p>
+                            <address class="subtitle is-6"></address>
+                        </div>
+                    </div>
+                    
+                    <div class="content">
+                    </div>
+                </div>
+            </div>
         </template>
-
+        
     </div>
 </div>
 
-<form id="chat-form" class="container" method="post">
-    <input id="message" name="message" type="text" placeholder="Message">
-    <input type="submit" value="Send">
+<form class="user-search" id="chat-form" method="POST">
+    <div class="field has-addons">
+      <div class="control is-expanded">
+          <input class="input" id="message" name="message" type="text" placeholder="Message">
+      </div>
+      <div class="control">
+        <input class="button is-info" type="submit" value="Send">
+      </div>
+    </div>
+</form>
+
 </form>
 
 <script>
@@ -49,26 +112,27 @@
     let chat_container = document.getElementById('chat-container');
     let message_template = document.getElementById('message-template');
     let message_input = document.getElementById('message');
-
+    
     function scroll_to_bottom() {
         chat_wrapper.scrollTop = chat_wrapper.scrollHeight;
     }
-
+    
     function append_message(username, message, sent) {
         var new_message = message_template.content.cloneNode(true);
-        new_message.querySelector('div').classList.add(sent ? 'sent' : 'received');
-        new_message.querySelector('address').textContent = username;
-        new_message.querySelector('p').textContent = message;
+        new_message.querySelector('.card').classList = sent ? 'card mt-4 ml-6' : 'card mt-4 mr-6 has-background-info-light';
+        new_message.querySelector('p.title').textContent = username;
+        new_message.querySelector('address').textContent = '@' + username;
+        new_message.querySelector('.content').textContent = message;
         new_message.querySelector('img').src = sent ? '/static/img/user.jpg' : '/static/img/support.jpg';
-
+        
         chat_container.appendChild(new_message);
         scroll_to_bottom();
     }
-
+    
     scroll_to_bottom();
     chat_form.onsubmit = function() {
         let form_data = new FormData(chat_form);
-
+        
         append_message('{{ identikey }}', form_data.get('message'), true);
         message_input.value = '';
         
@@ -82,7 +146,7 @@
         }).catch((error) => {
             console.error(error);
         })
-
+        
         return false;
     }
 </script>

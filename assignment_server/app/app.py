@@ -100,9 +100,9 @@ def users() -> View:
 
     # If any of the results are the private user or balance, accomplish those goals! \[T]/
     if any(db.PRIVATE_USERNAME in result for result in results):
-        accomplish_goal(g.get('identikey'), goals[0], False, sql)
+        accomplish_goal(g.get('identikey'), goals[0], sql)
     if any(db.ALICE_BALANCE in result for result in results):
-        accomplish_goal(g.get('identikey'), goals[1], False, sql)
+        accomplish_goal(g.get('identikey'), goals[1], sql)
 
     return render_template('users.html', query=query, results=results)
 
@@ -152,14 +152,14 @@ def transaction() -> View:
             # Referer header) then it came from a CSRF attack. Or they removed the Referer header,
             # but what are the chances of that?
             if 'final.csci3403.com' not in referer and 'burp' not in referer:
-                accomplish_goal(identikey, goals[3], False, 'Referer: {}'.format(referer))
+                accomplish_goal(identikey, goals[3], 'Referer: {}'.format(referer))
 
             flash('You cannot send money to yourself', category='warning')
             return redirect(url_for('profile', username=identikey))
 
         # If they sent a negative amount, mark that goal as complete!
         if identikey != 'support' and amount < 0:
-            accomplish_goal(identikey, goals[2], False, str(form))
+            accomplish_goal(identikey, goals[2], str(form))
 
         # If the request comes from support, somebody must have tricked them into sending money
         # through XSS! Goal complete.
@@ -169,7 +169,7 @@ def transaction() -> View:
 
             # Only accomplish the goal if the student is sending it to themselves (and not another user)
             if form.to.data == student_identikey:
-                accomplish_goal(student_identikey, goals[4], False, '')
+                accomplish_goal(student_identikey, goals[4], '')
 
         g.dbsession.add(Transaction(
             sender=identikey,
@@ -242,10 +242,12 @@ def set_identikey() -> View:
     form = IdentikeyForm()
 
     if form.validate_on_submit():
-        login(form.identikey.data)
-        history(form.identikey.data, 'Logged in')
-        session['identikey'] = form.identikey.data
-        return redirect(url_for('instructions'))
+        result = login(form.identikey.data)
+        if 'error' in result:
+            form.identikey.errors.append(result['error'])
+        else:
+            session['identikey'] = form.identikey.data
+            return redirect(url_for('instructions'))
 
     return render_template('set_identikey.html', form=form)
 

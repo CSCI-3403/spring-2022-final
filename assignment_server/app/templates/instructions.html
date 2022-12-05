@@ -1,43 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Instructions</h1>
-<p>You have been hired by a startup, <b>BIN/CA$H</b>, to do a security assessment of their new webapp. They have asked you to analyze the site for any security vulnerabilities which would let users take malicious actions.</p>
+<h1 class="title">Instructions</h1>
+<p class="block">You have been hired by a startup, <b>BIN/CA$H</b>, to do a security assessment of their new webapp. They have asked you to analyze the site for any security vulnerabilities which would let users take malicious actions.</p>
 
-<p>You have been given a list of potential threats, which are tracked on the left side of the screen. Your goal is to demonstrate how an attacker could perform each attack, so the company knows how to fix them.</p>
+<p class="block">You have <b>not</b> been given permission to attack or deface the site outside of the attacks given to you. You should avoid any malicious actions that are not part of the exercise.</p>
 
-<p>You have <b>not</b> been given permission to attack or deface the site outside of the attacks given to you. You should avoid any malicious actions that are not part of the exercise.</p>
+<p class="block">You are given a list of potential threats, which are tracked on the left side of the screen. Your goal is to demonstrate how an attacker could perform each attack, so the company knows how to fix them.</p>
 
-<p>Here are the attacks they want you to demonstrate:</p>
-
-<section class="instruction-goal" id="SQL Injection">
+<section class="box" id="SQL Injection">
     <h3>SQL Injection</h3>
-    View the "private" profiles which are not normally visible
+    <p class="block">View the "private" profiles which are not normally visible</p>
 </section>
 
-<section class="instruction-goal" id="SQL UNION Attack">
+<section class="box" id="SQL UNION Attack">
     <h3>SQL UNION Attack</h3>
-    Find out what Alice's balance is
-    <i class="hint"><b>Hint</b>: This attack is a slightly more advanced version of the attack in Lab 3. You may want to refer back to <a href="https://portswigger.net/web-security/sql-injection/union-attacks">this guide</a> from that lab.</i>
-    <i class="hint"><b>Hint</b>: Each user's balance is stored in a column named "balance". The goal will be marked as complete once Alice's balance appears anywhere on the page. Profile names are case-sensitive.</i>
+    <p class="block">Find out what Alice's balance is</p>
+    <article class="message is-primary">
+        <div class="message-body">
+            This attack is a slightly more advanced version of the attack in Lab 3. You may want to refer back to <a href="https://portswigger.net/web-security/sql-injection/union-attacks">this guide</a> from that lab.
+        </div>
+    </article>
+    <article class="message is-primary">
+        <div class="message-body">
+            Each user's balance is stored in a column named "balance". The goal will be marked as complete once Alice's balance appears anywhere on the page. Usernames are case-sensitive.
+        </div>
+    </article>
 </section>
     
-<section class="instruction-goal" id="Client-side security">
+<section class="box" id="Client-side security">
     <h3>Client-side security</h3>
-    Send a transaction which steals money from another user
+    <p class="block">Send a transaction which steals money from another user</p>
 </section>
 
-<section class="instruction-goal" id="CSRF">
+<section class="box" id="CSRF">
     <h3>CSRF</h3>
-    Create a local HTML file which exploits CSRF to send you a transaction
-    <i class="hint"><b>Hint</b>: If your attack is successful, this goal will be marked as "complete" when you open the file. It will work even though you are not allowed to send yourself a transaction.</i>
-    <i class="note"><b>Note</b>: Some folks have been having a problem where their CSRF requests do not include cookies. If you get redirected to the login page, make sure you are opening your attack in the same browser as a logged-in session. You may need to try using another browser.</i>
+    <p class="block">Create a local HTML file which exploits CSRF to send you a transaction</p>
+    <article class="message is-primary">
+        <div class="message-body">
+            If your attack is successful, this goal will be marked as "complete" when you open the file. It will work even though you are not allowed to send yourself a transaction.
+        </div>
+    </article>
+    <!-- <article class="note"><b>Note</b>: Some folks have been having a problem where their CSRF requests do not include cookies. If you get redirected to the login page, make sure you are opening your attack in the same browser as a logged-in session. You may need to try using another browser.
+    </article> -->
 </section>
     
-<section class="instruction-goal" id="Stored XSS">
+<section class="box" id="Stored XSS">
     <h3>Stored XSS</h3>
-    Trick the support staff into sending you money
-    <i class="hint"><b>Hint</b>: JavaScript code can be used to click buttons on the page. You can test code in the console before using it in an attack.</i>
-    <i class="hint"><b>Hint</b>: The support staff will click any link you send them. You may need to refresh your page for the goal scoreboard to update.</i>
+    <p class="block">Trick the support staff into sending you money</p>
+    <article class="message is-primary">
+        <div class="message-body">
+            The support staff will click any link you send them. You may need to refresh your page for the goal scoreboard to update.
+        </div>
+    </article>
 </section>
 {% endblock %}
