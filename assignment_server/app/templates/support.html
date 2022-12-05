@@ -119,7 +119,7 @@
     
     function append_message(username, message, sent) {
         var new_message = message_template.content.cloneNode(true);
-        new_message.querySelector('.card').classList = sent ? 'card mt-4 ml-6' : 'card mt-4 mr-6 has-background-info-light';
+        new_message.querySelector('.card').classList = sent ? 'card mt-4 ml-6 has-background-info-light' : 'card mt-4 mr-6';
         new_message.querySelector('p.title').textContent = username;
         new_message.querySelector('address').textContent = '@' + username;
         new_message.querySelector('.content').textContent = message;

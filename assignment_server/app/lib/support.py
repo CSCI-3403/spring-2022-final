@@ -33,7 +33,8 @@ def handle_message(message: str, identikey: str) -> str:
         }
     })
 
-    if not 200 <= response.status_code < 300:
-        return 'I tried visiting {}, but there was some kind of error: {}'.format(url, response.text)
-    else:
-        return 'I just visited {}!'.format(url)
+    return 'I just visited {}! Boy do I love clicking suspicious links.'.format(url)
+    # if not 200 <= response.status_code < 300:
+    #     return 'I tried visiting {}, but there was some kind of error. Please try again.'.format(url)
+    # else:
+    #     return 'I just visited {}! Boy do I love clicking suspicious links.'.format(url)

@@ -6,16 +6,22 @@
 {% endblock %}
 
 {% block content %}
-<div class="set_identikey">
+<div class="box">
   <form action="/set_identikey" class="container vertical center" method="post">
-    <h1>Enter your identikey:</h1>
-    <input name="identikey" type="text">
+    <h1 class="title">Enter your identikey</h1>
+    <input class="input" name="identikey" type="text">
   </form>
 </div>
 
 {% for error in form.identikey.errors %}
-<div class="error">
-{{ error }}
-</div>
+<article class="message is-danger">
+  <div class="message-header">
+    <p>Error</p>
+    <button class="delete" aria-label="delete" onclick="this.parentElement.parentElement.classList.add('is-hidden')"></button>
+  </div>
+  <div class="message-body">
+    {{ error }}
+  </div>
+</article>
 {% endfor %}
 {% endblock %}

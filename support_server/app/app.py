@@ -41,7 +41,7 @@ driver = webdriver.Remote(
     seleniumwire_options=seleniumwire_options,
     options=firefox_options,
 )
-driver.set_page_load_timeout(3)
+driver.set_page_load_timeout(2)
 lock = Lock()
 
 def get(url: str, headers: Dict[str, str]) -> None:

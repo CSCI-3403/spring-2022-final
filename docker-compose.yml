@@ -4,7 +4,7 @@ services:
   assignment:
     build: assignment_server/
     ports:
-      - "80:80/tcp"
+      - "8080:80/tcp"
     depends_on:
       - "score"
     restart: always
@@ -17,7 +17,7 @@ services:
   score:
     build: score_server/
     ports:
-      - "8080:80/tcp"
+      - "8081:80/tcp"
     expose:
       - "80"
     restart: always
@@ -32,7 +32,7 @@ services:
     depends_on:
       - webdriver
     ports:
-      - "8081:80/tcp"
+      - "8082:80/tcp"
     expose:
       - "80"
       - "3128"
@@ -49,7 +49,7 @@ services:
       - SE_NODE_MAX_SESSIONS=2
       - SE_NODE_SESSION_TIMEOUT=86400
     ports:
-      - "7900:7900"
+      - "8083:7900"
       - "4444:4444"
     networks:
       final:

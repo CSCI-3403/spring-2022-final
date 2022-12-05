@@ -61,7 +61,7 @@ def get_goals() -> View:
 def login(identikey: str) -> View:
     student = db.session.query(Student).filter(Student.identikey == identikey).first()
     if not student:
-        return jsonify({ 'error': 'Invalid identikey' })
+        return jsonify({ 'error': 'Invalid identikey (let your instructor know if you believe this is an error)' })
 
     return jsonify({})
 

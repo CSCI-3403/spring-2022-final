@@ -63,7 +63,7 @@ def before_request() -> Optional[Response]:
         g.identikey = identikey
         g.dbsession = db.session(identikey)
     # If it does not exist, redirect to /set_identikey
-    elif request.path not in ['/set_identikey', '/static/main.css']:
+    elif request.path not in ['/set_identikey', '/static/bulma.min.css']:
         log.info('Got non-logged-in request for {}'.format(request.path))
         return redirect(url_for('set_identikey'))
 
@@ -89,9 +89,9 @@ def users() -> View:
     try:
         results = g.dbsession.execute(sql).all()
     except sqlite3.Warning as e:
-        return render_template('users.html', query=query, error=e, sql=sql)
+        return render_template('users.html', query=query, error='Error: ' + str(e), sql=sql)
     except DatabaseError as e:
-        return render_template('users.html', query=query, error=e.orig, sql=sql)
+        return render_template('users.html', query=query, error='Error: ' + str(e.orig), sql=sql)
         
     if not results:
         return render_template('users.html', query=query, error='No results for: {}'.format(query))
@@ -152,7 +152,7 @@ def transaction() -> View:
             if 'final.csci3403.com' not in referer and 'burp' not in referer:
                 accomplish_goal(identikey, goals[3], 'Referer: {}'.format(referer))
 
-            flash('You cannot send money to yourself', category='Warning')
+            # flash('You cannot send money to yourself', category='Warning')
             return redirect(url_for('profile', username=identikey))
 
         # If they sent a negative amount, mark that goal as complete!
